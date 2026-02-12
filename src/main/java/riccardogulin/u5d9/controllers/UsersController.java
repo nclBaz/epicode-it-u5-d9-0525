@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import riccardogulin.u5d9.entities.User;
 import riccardogulin.u5d9.exceptions.ValidationException;
 import riccardogulin.u5d9.payloads.UserDTO;
@@ -87,5 +88,15 @@ public class UsersController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void findByIdAndDelete(@PathVariable UUID userId) {
 		this.usersService.findByIdAndDelete(userId);
+	}
+
+	@PatchMapping("/{userId}/avatar")
+	public String uploadImage(@RequestParam("profile_picture") MultipartFile file, @PathVariable UUID userId) {
+		// profile_picture deve corrispondere ESATTAMENTE al campo del Form Data dove viene inserito il file
+		// se così non è il file non verrà trovato
+
+		String url = this.usersService.uploadAvatar(file);
+
+		return url; // TODO: cambiare return da String ad un payload in JSON
 	}
 }
